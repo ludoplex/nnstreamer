@@ -18,10 +18,15 @@ from struct import pack
 
 
 def save_test_data(filename, channel, height, width, batch, idx_i, idx_j, idx_k, idx_l):
-    data = []
-    for b, c, h, w in product(range(0, batch), range(0, channel), range(0, height), range(0, width)):
-        data.append(random.uniform(0.0, 10.0))
-
+    data = [
+        random.uniform(0.0, 10.0)
+        for b, c, h, w in product(
+            range(0, batch),
+            range(0, channel),
+            range(0, height),
+            range(0, width),
+        )
+    ]
     string = pack('%df' % (len(data)), *data)
     with open(filename, 'wb') as file:
         file.write(string)
@@ -34,7 +39,7 @@ def save_test_data(filename, channel, height, width, batch, idx_i, idx_j, idx_k,
     a = np.transpose(a, (idx_i, idx_j, idx_k, idx_l))
     a = a.copy(order='C')
 
-    with open(filename + '.golden', 'wb') as file1:
+    with open(f'{filename}.golden', 'wb') as file1:
         file1.write(a)
 
 

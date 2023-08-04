@@ -41,8 +41,7 @@ def main():
     cf = CustomFilter()
     print(cf)
     shape, dtype = [D1, D2, D3, D4], "uint8"
-    if 1 :
-        input_dims = [nns.TensorShape(shape, dtype)]
+    input_dims = [nns.TensorShape(shape, dtype)]
 #        cf.setInputDim(input_dims) # callback
     for idx in range(10) :
         in_ = np.ones(shape).astype(np.uint8)

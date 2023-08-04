@@ -32,10 +32,17 @@ def read_gtest_xml(filename):
 
         lines = fd.readlines()
         for line in lines:
-            res = re.match(r'<testsuites tests="(\d+)" failures="(\d+)" disabled="(\d+)"', line)
-            if res:
-                return (int(res.group(1)), int(res.group(1)) - int(res.group(2)) - int(res.group(3)),
-                        int(res.group(2)), int(res.group(3)), neg)
+            if res := re.match(
+                r'<testsuites tests="(\d+)" failures="(\d+)" disabled="(\d+)"',
+                line,
+            ):
+                return (
+                    int(res[1]),
+                    int(res[1]) - int(res[2]) - int(res[3]),
+                    int(res[2]),
+                    int(res[3]),
+                    neg,
+                )
     return (0, 0, 0, 0, 0)
 
 
@@ -45,17 +52,24 @@ def read_ssat(filename):
     with open(filename, 'r') as fd:
         lines = fd.readlines()
         for line in lines:
-            res = re.match(r'passed=(\d+), failed=(\d+), ignored=(\d+), negative=(\d+)', line)
-            if res:
-                return (int(res.group(1)) + int(res.group(2)) + int(res.group(3)), int(res.group(1)),
-                        int(res.group(2)), int(res.group(3)), int(res.group(4)))
+            if res := re.match(
+                r'passed=(\d+), failed=(\d+), ignored=(\d+), negative=(\d+)',
+                line,
+            ):
+                return (
+                    int(res[1]) + int(res[2]) + int(res[3]),
+                    int(res[1]),
+                    int(res[2]),
+                    int(res[3]),
+                    int(res[4]),
+                )
     return (0, 0, 0, 0, 0)
 
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
         print("Usage:")
-        print(" $ " + sys.argv[0] + " <gtest xml path> <ssat summary path>")
+        print(f" $ {sys.argv[0]} <gtest xml path> <ssat summary path>")
         print("")
         sys.exit(1)
 
@@ -79,12 +93,16 @@ if __name__ == '__main__':
 
     (t, p, f, i, n) = read_ssat(sys.argv[2])
 
-    print("GTest (total " + str(tg) + " cases)")
-    print("  Passed: " + str(pg) + " / Failed: " + str(fg) + " / Ignored: " + str(ig) +
-          " | Positive: " + str(posg) + " / Negative: " + str(ng))
-    print("SSAT (total " + str(t) + " cases)")
-    print("  Passed: " + str(p) + " / Failed: " + str(f) + " / Ignored: " + str(i) +
-          " | Positive: " + str(t - n) + " / Negative: " + str(n))
-    print("Grand Total: " + str(pg + t) + " cases (negatives : " + str(ng + n) + ")")
-    print("  Passed: " + str(pg + p) + " / Failed: " + str(fg + f) + " / Ignored: " + str(ig + i))
+    print(f"GTest (total {str(tg)} cases)")
+    print(
+        f"  Passed: {str(pg)} / Failed: {str(fg)} / Ignored: {str(ig)} | Positive: {posg} / Negative: {str(ng)}"
+    )
+    print(f"SSAT (total {str(t)} cases)")
+    print(
+        f"  Passed: {str(p)} / Failed: {str(f)} / Ignored: {str(i)} | Positive: {str(t - n)} / Negative: {str(n)}"
+    )
+    print(f"Grand Total: {str(pg + t)} cases (negatives : {str(ng + n)})")
+    print(
+        f"  Passed: {str(pg + p)} / Failed: {str(fg + f)} / Ignored: {str(ig + i)}"
+    )
     sys.exit(0)

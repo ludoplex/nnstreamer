@@ -20,7 +20,7 @@ def save_test_data(filename, dtype, cmin, cmax):
         file.write(data.tobytes())
 
     np.clip(data, cmin, cmax, out=data)
-    with open(filename + '.golden', 'wb') as file:
+    with open(f'{filename}.golden', 'wb') as file:
         file.write(data.tobytes())
 
 

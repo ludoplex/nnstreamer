@@ -21,7 +21,7 @@ from test_utils import read_file
 
 def compare_float(a, b):
     diff = float(a) - float(b)
-    return not (diff > 0.01 or diff < -0.01)
+    return diff <= 0.01 and diff >= -0.01
 
 
 def compare_int(a, b, maskb):
@@ -29,28 +29,26 @@ def compare_int(a, b, maskb):
     valb = int(b)
     # Remove the signedness characteristics!
     diff = (vala ^ valb) & maskb
-    return not (diff != 0)
+    return diff == 0
 
 
 ##
 # @brief Auxiliary function to check args of test_typecast
 #
 def _check_args(lena, typeasize, lenb, typebsize):
-    if (0 < (lena % typeasize)) or (0 < (lenb % typebsize)):
+    if lena % typeasize > 0 or lenb % typebsize > 0:
         return False
-    if (lena // typeasize) != (lenb // typebsize):
-        return False
-    return True
+    return lena // typeasize == lenb // typebsize
 
 
 ##
 # @brief Auxiliary function to compare values
 #
 def _compare(vala, valb, typeb, maskb):
-    if typeb[0:5] == 'float':
+    if typeb[:5] == 'float':
         if not compare_float(vala, valb):
             return False
-    elif typeb[0:4] == 'uint' or typeb[0:3] == 'int':
+    elif typeb[:4] == 'uint' or typeb[:3] == 'int':
         if not compare_int(vala, valb, maskb):
             return False
     else:

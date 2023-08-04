@@ -409,9 +409,9 @@ if __name__ == '__main__':
     # @todo @warning We may require prefix for all custom filter in later versions.
     # 2. Ask/Check for fname (file & official custom filter name)
     print('Please enter the custom filter name registered to tensor_filter.')
-    fname = get_input('Or press enter without name if [' + def_fname + '] is ok: ')
+    fname = get_input(f'Or press enter without name if [{def_fname}] is ok: ')
     fname = ''.join(re.findall(r"([a-zA-Z0-9_]+)", fname))
-    if len(fname) < 1:
+    if not fname:
         fname = def_fname
 
     result = common_head
@@ -420,10 +420,10 @@ if __name__ == '__main__':
     while 1:
         option = get_input('Are dimensions of input/output tensors fixed? (yes/no):')
         option = option.lower()
-        if option == 'y' or option == 'yes':
+        if option in ['y', 'yes']:
             result += dim_fixed
             break
-        if option == 'n' or option == 'no':
+        if option in ['n', 'no']:
             result += dim_variable
             break
         print("Please enter yes/y or no/n")
@@ -432,10 +432,10 @@ if __name__ == '__main__':
     while 1:
         option = get_input('Are you going to allocate output buffer in your code? (yes/no):')
         option = option.lower()
-        if option == 'y' or option == 'yes':
+        if option in ['y', 'yes']:
             result += invoke_allocate
             break
-        if option == 'n' or option == 'no':
+        if option in ['n', 'no']:
             result += invoke_no_allocate
             break
         print("Please enter yes/y or no/n")
@@ -443,12 +443,9 @@ if __name__ == '__main__':
     # 5. Generate .C file
     result += common_tail
     ccode = result.format(fname=fname, name=name, sname=sname, today=today)
-    cfile = open(fname + ".c", "w")
-    cfile.write(ccode)
-    cfile.close()
-
+    with open(f"{fname}.c", "w") as cfile:
+        cfile.write(ccode)
     # 6. Generate .meson file
     mesoncode = meson_script.format(fname=fname)
-    mesonfile = open("meson.build", "w")
-    mesonfile.write(mesoncode)
-    mesonfile.close()
+    with open("meson.build", "w") as mesonfile:
+        mesonfile.write(mesoncode)

@@ -46,11 +46,8 @@ def saveBMP(filename, data, colorspace, width, height):
     for h in range(height - 1, -1, -1):
         for w in range(0, width):
             pos = bytes_per_px * (w + width * h)
-            for pp in poss:
-                pixel_list.append(data[pos + pp])
-        for x in range(0, (width * 3) % 4):
-            pixel_list.append(0)
-
+            pixel_list.extend(data[pos + pp] for pp in poss)
+        pixel_list.extend(0 for _ in range(0, (width * 3) % 4))
     graphics = pack('%dB' % (len(pixel_list)), *pixel_list)
     # BMP file header
     if colorspace == 'GRAY8':
@@ -82,63 +79,63 @@ def write(filename, data):
 def gen_RGB():
     expected_size = 280 * 40 * 3
     pixels = []
-    for i in range(0, 26):
+    for _ in range(0, 26):
         # White
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [255, 255, 255]
         # Yellow
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [255, 255, 0]
         # Light Blue
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [0, 255, 255]
         # Green
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [0, 255, 0]
         # Purple
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [255, 0, 255]
         # Red
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [255, 0, 0]
         # Blue
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [0, 0, 255]
-    for i in range(26, 30):
+    for _ in range(26, 30):
         # Blue
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [0, 0, 255]
         # Black
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [0, 0, 0]
         # Purple
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [255, 0, 255]
         # Black
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [0, 0, 0]
         # Light Blue
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [0, 255, 255]
         # Black
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [0, 0, 0]
         # White
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [255, 255, 255]
-    for i in range(0, 46):
+    for _ in range(0, 46):
         # Dark Blue
         pixels += [0, 0, 128]
-    for i in range(46, 93):
+    for _ in range(46, 93):
         # White
         pixels += [255, 255, 255]
-    for i in range(93, 140):
+    for _ in range(93, 140):
         # Gray Blue
         pixels += [0, 128, 255]
-    for i in range(140, 186):
+    for _ in range(140, 186):
         # Black
         pixels += [0, 0, 0]
-    for i in range(186, 210):
+    for _ in range(186, 210):
         # Dark Gray
         pixels += [19, 19, 19]
     # We do not check the reset pixels: they are randomly generated.
@@ -154,63 +151,63 @@ def gen_RGB():
 def gen_BGRx():
     pixels = []
     expected_size = 280 * 40 * 4
-    for i in range(0, 26):
+    for _ in range(0, 26):
         # White
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [255, 255, 255, 255]
         # Yellow
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [0, 255, 255, 255]
         # Light Blue
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [255, 255, 0, 255]
         # Green
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [0, 255, 0, 255]
         # Purple
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [255, 0, 255, 255]
         # Red
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [0, 0, 255, 255]
         # Blue
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [255, 0, 0, 255]
-    for i in range(26, 30):
+    for _ in range(26, 30):
         # Blue
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [255, 0, 0, 255]
         # Black
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [0, 0, 0, 255]
         # Purple
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [255, 0, 255, 255]
         # Black
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [0, 0, 0, 255]
         # Light Blue
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [255, 255, 0, 255]
         # Black
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [0, 0, 0, 255]
         # White
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [255, 255, 255, 255]
-    for i in range(0, 46):
+    for _ in range(0, 46):
         # Dark Blue
         pixels += [128, 0, 0, 255]
-    for i in range(46, 93):
+    for _ in range(46, 93):
         # White
         pixels += [255, 255, 255, 255]
-    for i in range(93, 140):
+    for _ in range(93, 140):
         # Gray Blue
         pixels += [255, 128, 0, 255]
-    for i in range(140, 186):
+    for _ in range(140, 186):
         # Black
         pixels += [0, 0, 0, 255]
-    for i in range(186, 210):
+    for _ in range(186, 210):
         # Dark Gray
         pixels += [19, 19, 19, 255]
     # We do not check the reset pixels: they are randomly generated.
@@ -228,66 +225,66 @@ def gen_BGRx():
 def gen_GRAY8():
     pixels = []
     expected_size = 280 * 40
-    for i in range(0, 26):
+    for _ in range(0, 26):
         # 0xEB
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [235]
         # 0xD2
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [210]
         # 0xAA
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [170]
         # 0x91
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [145]
         # 0x6A
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [106]
         # 0x51
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [81]
         # 0x29
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [41]
-    for i in range(26, 30):
+    for _ in range(26, 30):
         # 0x29
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [41]
         # 0x10
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [16]
         # 0x6A
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [106]
         # 0x10
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [16]
         # 0xAA
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [170]
         # 0x10
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [16]
         # 0xEB
-        for j in range(0, 40):
+        for _ in range(0, 40):
             pixels += [235]
-    for i in range(0, 46):
+    for _ in range(0, 46):
         # 0x10
         pixels += [16]
-    for i in range(46, 93):
+    for _ in range(46, 93):
         # 0xEB
         pixels += [235]
-    for i in range(93, 140):
+    for _ in range(93, 140):
         # 0x10
         pixels += [16]
-    for i in range(140, 163):
+    for _ in range(140, 163):
         # 0x00
         pixels += [0]
-    for i in range(163, 186):
+    for _ in range(163, 186):
         # 0x10
         pixels += [16]
-    for i in range(186, 210):
+    for _ in range(186, 210):
         # 0x20
         pixels += [32]
     # We do not check the reset pixels: they are randomly generated.
@@ -319,8 +316,13 @@ def gen_BMP_random(color_type, width, height, filename_prefix):
         # Assume RGB
         pixel_list = [random.randrange(256) for _ in range(height * width * 3)]
 
-    saveBMP(filename_prefix + '_' + color_type + '_' + str(width) + 'x' + str(height) + '.bmp',
-            pixel_list, color_type, width, height)
+    saveBMP(
+        f'{filename_prefix}_{color_type}_{str(width)}x{str(height)}.bmp',
+        pixel_list,
+        color_type,
+        width,
+        height,
+    )
 
     string_size = len(pixel_list)
     string = pack('%dB' % string_size, *pixel_list)
@@ -352,37 +354,26 @@ def gen_BMP_stream(filename_prefix, golden_filename, num_sink):
             pixels[3] += [255, 0, 0]
             # blue, Frame 4
             pixels[4] += [0, 0, 255]
-            # white-black checker, Frame 5
             if (((x / 4) % 2) + ((y / 4) % 2)) == 1:
                 pixels[5] += [0, 0, 0]
-            else:
-                pixels[5] += [255, 255, 255]
-            # red-blue checker, Frame 6
-            if (((x / 4) % 2) + ((y / 4) % 2)) == 1:
                 pixels[6] += [0, 0, 255]
-            else:
-                pixels[6] += [255, 0, 0]
-            # green-red checker, Frame 7
-            if (((x / 4) % 2) + ((y / 4) % 2)) == 1:
                 pixels[7] += [255, 0, 0]
             else:
+                pixels[5] += [255, 255, 255]
+                pixels[6] += [255, 0, 0]
                 pixels[7] += [0, 255, 0]
-            # red-cross-on-white, Frame 8
             if x == y:
                 pixels[8] += [255, 0, 0]
-            else:
-                pixels[8] += [255, 255, 255]
-            # blue-cross-on-black, Frame 9
-            if x == y:
                 pixels[9] += [0, 0, 255]
             else:
+                pixels[8] += [255, 255, 255]
                 pixels[9] += [0, 0, 0]
 
     string = []
     with open(golden_filename, 'wb') as file:
         for i in range(0, 10):
-            saveBMP(filename_prefix + '_' + str(i) + '.bmp', pixels[i], 'RGB', 16, 16)
+            saveBMP(f'{filename_prefix}_{str(i)}.bmp', pixels[i], 'RGB', 16, 16)
             string = [pack('%dB' % (len(v)), *v) for v in pixels]
-            for j in range(0, num_sink):
+            for _ in range(0, num_sink):
                 file.write(string[i])
     return string

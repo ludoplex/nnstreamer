@@ -18,10 +18,8 @@ from test_utils import convert_to_bytes
 
 
 def get_label(fname):
-    f = open(fname, 'rb')
-    rbyte = f.read()
-    f.close()
-
+    with open(fname, 'rb') as f:
+        rbyte = f.read()
     score_list = []
     for i in range(10):
         byte = b''
