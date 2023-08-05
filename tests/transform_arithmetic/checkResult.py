@@ -35,11 +35,9 @@ def get_value(val, unpack_format):
 # @brief Auxiliary function to check args of test_arithmetic
 #
 def _check_args(lena, typeasize, lenb, typebsize):
-    if (0 < (lena % typeasize)) or (0 < (lenb % typebsize)):
+    if lena % typeasize > 0 or lenb % typebsize > 0:
         return False
-    if (lena // typeasize) != (lenb // typebsize):
-        return False
-    return True
+    return lena // typeasize == lenb // typebsize
 
 
 ##
@@ -48,20 +46,17 @@ def _check_args(lena, typeasize, lenb, typebsize):
 def _check_diff(mode, va, vb, val1, val2):
     if mode == 'add':
         ret = va + val1
-    elif mode == 'mul':
-        ret = va * val1
     elif mode == 'add-mul':
         ret = (va + val1) * val2
+    elif mode == 'mul':
+        ret = va * val1
     elif mode == 'mul-add':
         ret = (va * val1) + val2
     else:
         return False
 
     diff = ret - vb
-    if abs(diff) > 0.01:
-        return False
-    else:
-        return True
+    return abs(diff) <= 0.01
 
 
 ##

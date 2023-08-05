@@ -30,7 +30,7 @@ class Filter:
     def __init__(self, _element, _name=None):
         if _name is not None and len(_name) > 0:
             if _name in Filter._declared_names:
-                raise RuntimeError("Duplicated name in elements: " + str(_name))
+                raise RuntimeError(f"Duplicated name in elements: {str(_name)}")
             n = _name
         else:
             n = Filter.generate_element_name()
@@ -42,7 +42,7 @@ class Filter:
     @staticmethod
     def generate_element_name():
         def _gen_name(idx):
-            return '__id' + str(idx)
+            return f'__id{str(idx)}'
 
         while _gen_name(Filter._generated) in Filter._declared_names:
             Filter._generated = Filter._generated + 1
@@ -81,18 +81,14 @@ class Pipeline:
         if name is None or len(name) == 0:
             raise RuntimeError("Incorrect usage of __getFullPadname.")
         if padname is None or len(padname) == 0:
-            return name + "."
+            return f"{name}."
         else:
-            return name + "." + padname
+            return f"{name}.{padname}"
 
     ##
     # @brief Verify filter and return object if filter is given with name
     def __verifyFilter(self, f):
-        if type(f) is str:
-            _a = self.__getFilterByName(f)
-        else:
-            _a = f
-
+        _a = self.__getFilterByName(f) if type(f) is str else f
         if _a is None or type(_a) is not Filter:
             raise RuntimeError("It is supposed to be a filter (element) or name of a filter.")
 
@@ -100,7 +96,7 @@ class Pipeline:
             raise RuntimeError("The 'name' field of the given filter (element) is not valid.")
 
         if _a.name not in self.filters:
-            raise RuntimeError("The given object, " + _a.name + ", cannot be found.")
+            raise RuntimeError(f"The given object, {_a.name}, cannot be found.")
         return _a
 
     ##
@@ -126,38 +122,30 @@ class Pipeline:
         for i in self.filters:
             f = self.filters[i]
             body += 'node {\n'
-            body += '  calculator: "' + f.element + ":" + f.name + '"\n'
+            body += f'  calculator: "{f.element}:{f.name}' + '"\n'
 
             if len(f.src) == 0:
                 inputstreams.append(f.name)
             for s in f.src:
-                body += '  input_stream: "' + self.__getFullPadname(s[1], s[2]) + '"\n'
+                body += f'  input_stream: "{self.__getFullPadname(s[1], s[2])}' + '"\n'
                 assert (s[0].name == s[1])
             for s in f.sink:
-                body += '  output_stream: "' + self.__getFullPadname(s[1], s[2]) + '"\n'
+                body += f'  output_stream: "{self.__getFullPadname(s[1], s[2])}' + '"\n'
                 assert (s[0].name == s[1])
             if len(f.properties) > 0:
                 body += '  node_options: {\n'
-                body += '    [type.gstreamer.org/' + f.element + '] {\n'
+                body += f'    [type.gstreamer.org/{f.element}' + '] {\n'
                 for p in f.properties:
-                    body += '      ' + p[0] + ': "' + p[1] + '"\n'
+                    body += f'      {p[0]}: "{p[1]}' + '"\n'
                 body += '    }\n'
                 body += '  }\n'
-        output = ''
-
-        ##
-        # @todo How do we handle src/sink nodes for mediapipe-like pbtxt?
-        #       The current implementation might not be adequote for their tools.
-        if len(inputstreams) == 0:
+        if not inputstreams:
             raise RuntimeError("There is no input node.")
-        else:
-            for i in inputstreams:
-                output += 'input_stream: "' + i + '"\n'
-        if len(outputstreams) == 0:
+        output = ''.join(f'input_stream: "{i}' + '"\n' for i in inputstreams)
+        if not outputstreams:
             raise RuntimeError("There is no output node.")
-        else:
-            for o in outputstreams:
-                output += 'output_stream: "' + o + '"\n'
+        for o in outputstreams:
+            output += f'output_stream: "{o}' + '"\n'
 
         output += '\n\n\n'
         output += body

@@ -18,10 +18,10 @@ from struct import pack
 
 
 def save_test_data(filename, width, height, dc_average=False):
-    data = []
-    for w, h in product(range(0, width), range(0, height)):
-        data.append(random.uniform(0.0, 10.0))
-
+    data = [
+        random.uniform(0.0, 10.0)
+        for w, h in product(range(0, width), range(0, height))
+    ]
     string = pack('%df' % (len(data)), *data)
     with open(filename, 'wb') as file:
         file.write(string)
@@ -29,17 +29,13 @@ def save_test_data(filename, width, height, dc_average=False):
     a = np.array(data)
     mean = np.mean(a)
     standard = np.std(a)
-    if dc_average:
-        result = a - mean
-    else:
-        result = abs((a - mean) / (standard + 1e-10))
-
-    data = []
-    for w, h in product(range(0, width), range(0, height)):
-        data.append(result[w * height + h])
-
+    result = a - mean if dc_average else abs((a - mean) / (standard + 1e-10))
+    data = [
+        result[w * height + h]
+        for w, h in product(range(0, width), range(0, height))
+    ]
     string = pack('%df' % (len(data)), *data)
-    with open(filename + '.golden', 'wb') as file1:
+    with open(f'{filename}.golden', 'wb') as file1:
         file1.write(string)
 
 
@@ -55,7 +51,7 @@ def save_test_per_channel_data(filename, num_channel, num_sample, dc_average=Fal
         std = np.std(arr, axis=0)
         result = abs(result / (std + 1e-10))
 
-    with open(filename + '.golden', 'wb') as f:
+    with open(f'{filename}.golden', 'wb') as f:
         f.write(result.astype('f').tobytes())
 
 

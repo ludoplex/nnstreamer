@@ -44,9 +44,7 @@ def write_file(filename, data):
 # @param[in] data The data to be converted to bytes array
 # @return bytes converted from the data
 def convert_to_bytes(data):
-    if isinstance(data, bytes):
-        return data
-    return pack("<B", data)
+    return data if isinstance(data, bytes) else pack("<B", data)
 
 
 ##
@@ -59,7 +57,7 @@ def compare_scaled_tensor(d1, d2, innerdim):
     len2 = len(data2)
 
     if (len1 * width2 * height2) != (len2 * width1 * height1):
-        print(str(len1 * width2 * height2) + ' / ' + str(len2 * width1 * height1))
+        print(f'{str(len1 * width2 * height2)} / {str(len2 * width1 * height1)}')
         return 1
 
     if (len1 != width1 * height1 * innerdim) or (len2 != width2 * height2 * innerdim):
@@ -70,7 +68,7 @@ def compare_scaled_tensor(d1, d2, innerdim):
         iy = y * height1 // height2
         if data1[c + ix * innerdim + iy * width1 * innerdim] != \
                 data2[c + x * innerdim + y * width2 * innerdim]:
-            print('At ' + str(x) + ',' + str(y))
+            print(f'At {str(x)},{str(y)}')
             return 5
 
     return 0
@@ -90,18 +88,18 @@ def compare_video_frame(file1, file2, colorspace, width, height):
     elif colorspace == "BGRx":
         channel = 4
     else:
-        print("Please check format. Your format: " + colorspace)
+        print(f"Please check format. Your format: {colorspace}")
         return 2
 
     if len1 != len2:
-        print("Failed to compare file size, file1 len: " + str(len1) + " file2 len:" + str(len2))
+        print(f"Failed to compare file size, file1 len: {len1} file2 len:{len2}")
         return 3
 
     padded = (4 - (channel * width) % 4) % 4
     ptr = 0
-    for h in range(0, height):
-        for w in range(0, width):
-            for c in range(0, channel):
+    for _ in range(0, height):
+        for _ in range(0, width):
+            for _ in range(0, channel):
                 if data1[ptr] != data2[ptr]:
                     print("Failed to compare data!")
                     return 4

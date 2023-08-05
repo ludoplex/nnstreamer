@@ -49,7 +49,7 @@ def generate_frame(seq, out):
         for i in range(0, 4):
             out[location(i, w, h)] = frame[location(i, w, h)]
         for w in range(1, 3):
-            for c in range(0, 4):
+            for _ in range(0, 4):
                 s = frame[location(0, w, h)]
                 s += out[location(0, w, h)]
                 out[location(0, w, h)] = s // 2

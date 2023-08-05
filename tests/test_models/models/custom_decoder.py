@@ -75,5 +75,4 @@ class CustomDecoder(object):
                             fbb.Int(dims[j])
                     fbb.Blob(raw_data[i])
 
-        data = bytes(fbb.Finish())
-        return data
+        return bytes(fbb.Finish())

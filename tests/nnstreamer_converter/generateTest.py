@@ -17,7 +17,7 @@ def save_test_data(filename, shape, type):
         file.write(data.tobytes())
 
     golden = data*2
-    with open(filename + '.golden', 'wb') as file:
+    with open(f'{filename}.golden', 'wb') as file:
         file.write(golden.tobytes())
 
 save_test_data('test_00.dat', [4,4,4,4,4], np.float32)
